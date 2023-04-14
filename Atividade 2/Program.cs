@@ -1,56 +1,69 @@
-﻿//escolha entre alcool e gasolina
-Console.WriteLine(@$"
-Seja bem vindo, gostaria de encher o tanque com alcool ou gasolina?
-Digite A para acool ou G para gasolina
-");
-string escolha = Console.ReadLine().ToLower();
-//a ou g
-
-//quantidade
-Console.WriteLine($"Quantos litros?");
-double litros = double.Parse(Console.ReadLine());
-//--------------------------------------------------
-
-Console.WriteLine($"{PostoDeGasolina(escolha, litros)}");
+﻿using System.Globalization;
 
 
-static double PostoDeGasolina(string escolha, double litros)
+//sistema de escolhas 
+bool escolhaCerta = false;
+string combustivel = "";
+float preco = 0;
+float DescontoMenor = 0.0f;
+float DescontoMaior = 0.0f;
+
+while (escolhaCerta == false)
 {
-    //valor e o tipo escolhido
-    double valor = 0;
+    //primeiro alcool ou gasolina
+    Console.WriteLine(@$"
+    -------------------------------------------------------------------
+    | Seja bem vindo ao nosso posto. hoje vai ser alcool ou gasolina? |
+    | digite 'a' para alcool     ou      digite 'g' para gasolina     |
+    -------------------------------------------------------------------
+    ");
+    combustivel = Console.ReadLine();
 
-    if (escolha == "a")
+    switch (combustivel)
     {
-        escolha = "alcool";
-        valor = 4.90f;
-    }
-    else if (escolha == "g")
-    {
-        escolha = "gasolina";
-        valor = 5.30f;
-    }
+        case "a":
+            combustivel = "Alcool";
+            preco = 4.90f;
+            DescontoMenor = 0.03f;
+            DescontoMaior = 0.05f;
+            escolhaCerta = true;
+            break;
 
-    //quantidade e preco final
-    if (litros <= 20 && escolha == "alcool")
-    {
-        valor = Math.Round((litros * valor) * 0.97, 2);
-        return (valor);
-    }
-    else if (litros > 20 && escolha == "alcool")
-    {
-        valor = Math.Round((litros * valor) * 0.95, 2);
-        return (valor);
-    }
-    else if (litros <= 20 && escolha == "gasolina")
-    {
-        valor = Math.Round((litros * valor) * 0.96, 2);
-        return (valor);
-    }
-    else if (litros > 20 && escolha == "gasolina")
-    {
-        valor = Math.Round((litros * valor) * 0.94, 2);
-        return (valor);
-    }
+        case "g":
+            combustivel = "Gasolina";
+            preco = 5.30f;
+            DescontoMenor = 0.04f;
+            DescontoMaior = 0.06f;
+            escolhaCerta = true;
+            break;
 
+        default:
+            Console.WriteLine($"Por favor, repita o processo e me diga o que vai querer");
+            escolhaCerta = false;
+            break;
+    }
 }
 
+Console.WriteLine($"Quantos litros?");
+int litro = int.Parse(Console.ReadLine());
+
+//metodo de calculo
+
+static float CalcularPreco(float preco, float DescontoMaior, float DescontoMenor, int litro)
+{
+    if (litro <= 20)
+    {
+        return (preco - (preco * DescontoMenor)) * litro;
+    }
+    else if (litro > 20)
+    {
+        return (preco - (preco * DescontoMaior)) * litro;
+    }
+    else
+    {
+        return (preco - (preco * DescontoMenor)) * litro;
+    }
+}
+
+Console.WriteLine($"Entrao foi {combustivel} hoje, saiu esse preco aqui parceiro(a):");
+Console.WriteLine(Math.Round(CalcularPreco(preco, DescontoMaior, DescontoMenor, litro),2).ToString("C", new CultureInfo("pt-BR")));
